@@ -1,5 +1,6 @@
 package com.example.shop;
 
+import com.example.shop.models.ShopDto;
 import com.github.javafaker.Faker;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -10,6 +11,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static io.restassured.RestAssured.when;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -19,6 +23,7 @@ class ShopApplicationTests {
 
 		RequestSpecification request;
 		Faker faker = new Faker();
+	static List<ShopDto> testShops = new ArrayList<>();
 
 		@BeforeAll
 		public static void setUp() {
@@ -45,7 +50,7 @@ class ShopApplicationTests {
 			Response response = request
 					.header("Content-type","application/json")
 					.and()
-//					.param("shopName", faker.name().title()+"_Shop")
+					.param("shopName", faker.name().title()+"_Shop")
 //					.body("shopName", faker.name().title()+"_Shop")
 					.post("/shops/add");
 
@@ -59,15 +64,16 @@ class ShopApplicationTests {
 			);
 
 		}
-//
-//		@Test
-//		public void shouldDeleteBook() {
-//			final BookDto bookToDelete = testBooks.get(faker.random().nextInt(0, testBooks.size() - 1));
-//
-//			Response response = request.param("name", bookToDelete.getName()).delete("/book/delete");
-//
-//			assertThat(response.statusCode()).isEqualTo(204);
-//		}
-//	}
 
-}
+		@Test
+	@DisplayName("Удаление магазина")
+		public void shouldDeleteShop() {
+			final ShopDto ShopToDelete = testShops.get(faker.random().nextInt(0, testShops.size() - 1));
+
+			Response response = request.param("id", 2).delete("/delete/{shopId}");
+
+			assertThat(response.statusCode()).isEqualTo(204);
+		}
+	}
+
+
